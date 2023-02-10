@@ -36,6 +36,6 @@ class ProductImage(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        ordering = ('-created_at')
+        ordering = ('created_at',)
         verbose_name = _('Product Image')
         verbose_name_plural = _('Product Images')
