@@ -16,6 +16,9 @@ class UserServicesV1:
     user_repos: repos.UserReposInterface = repos.UserReposV1()
 
     def create_user(self, data: OrderedDict) -> None:
+        ...#######################################################################
+
+    def verify_phone_number(self, data):
         user = self.user_repos.create_user(data=data)
         self._send_letter_to_email(email=user.email)
 

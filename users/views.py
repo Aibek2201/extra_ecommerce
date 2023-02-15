@@ -11,6 +11,10 @@ class UserViewSet(ViewSet):
         serializer = serializers.CreateUserSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
 
+    def verify_user(self, request, *args, **kwargs):
+        serializer = serializers.CreateUserSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
         self.user_services.create_user(data=serializer.validated_data)
 
         return Response(serializer.data, status=status.HTTP_201_CREATED)

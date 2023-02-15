@@ -6,7 +6,7 @@ class CreateUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = models.CustomUser
-        fields = ('email', 'password')
+        fields = ('phone_number', 'email')
 
 
 class CreateTokenSerializer(serializers.Serializer):

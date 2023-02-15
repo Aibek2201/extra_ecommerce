@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'django_cleanup.apps.CleanupConfig',
     'rest_framework.authtoken',
     'rest_framework_simplejwt',
+    'phonenumber_field',
 
     'products',
     'users',
