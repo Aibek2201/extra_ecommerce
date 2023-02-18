@@ -48,3 +48,6 @@ class CustomUser(AbstractUser):
     REQUIRED_FIELDS = ['email']
 
     objects = CustomUserManager()
+
+    def __str__(self):
+        return str(self.phone_number)

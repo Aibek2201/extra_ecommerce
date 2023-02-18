@@ -9,9 +9,13 @@ class CreateUserSerializer(serializers.ModelSerializer):
         fields = ('phone_number', 'email')
 
 
+class VerifyUserSerializer(serializers.Serializer):
+    session_id = serializers.UUIDField()
+    code = serializers.CharField(max_length=4)
+
+
 class CreateTokenSerializer(serializers.Serializer):
-    email = serializers.EmailField()
-    password = serializers.CharField()
+    phone_number = serializers.CharField()
 
 
 class GetUSerSerializer(serializers.Serializer):
