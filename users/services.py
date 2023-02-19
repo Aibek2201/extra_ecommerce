@@ -23,11 +23,7 @@ class UserServicesV1:
     user_repos: repos.UserReposInterface = repos.UserReposV1()
 
     def create_user(self, data: OrderedDict) -> dict:
-        code = self._generate_code()
-        session_id = self._generate_session_id()
-        session = {'code': code, **data}
-        cache.set(session_id, session, timeout=300)
-        self._send_sms_to_phone_number(phone_number=data['phone_number'], code=code)
+        session_id = self._verify_phone_number(data=data)
 
         return {
             'session_id': session_id,
@@ -49,17 +45,20 @@ class UserServicesV1:
         self._send_letter_to_email(email=user.email)
 
     def create_token(self, data:OrderedDict) -> dict:
-        code = self._generate_code()
-        session_id = self._generate_session_id()
-        cache.set(sesion_id, {**data, 'code': code}, timeout=300)
+        session_id = self._verify_phone_number(data=data)
 
         return {
             'session_id': session_id,
         }
 
     def verify_token(self, data: OrderedDict) -> dict:
-        user = self.user_repos.get_user(data=data)
+        session = cache.get(data['session_id'])
+        if not session:
+            return
 
+        if session['code'] != data['code']:
+            return
+        user = self.user_repos.get_user(data={'phone_number': session['phone_number']})
         access = tokens.AccessToken.for_user(user=user)
         refresh = tokens.RefreshToken.for_user(user=user)
 
@@ -67,6 +66,15 @@ class UserServicesV1:
             'access': str(access),
             'refresh': str(refresh),
         }
+
+    def _verify_phone_number(self, data: OrderedDict) -> str:
+        user = self.user_repos.get_user(data)
+        code = self._generate_code()
+        session_id = self._generate_session_id()
+        cache.set(session_id, {'phone_number': str(user.phone_number), 'code': code}, timeout=300)
+        self._send_sms_to_phone_number(phone_number=data['phone_number'], code=code)
+
+        return session_id
 
     @staticmethod
     def _send_letter_to_email(email: str) -> None:
