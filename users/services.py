@@ -2,8 +2,10 @@ import random
 import uuid
 from typing import Protocol, OrderedDict
 
+from django.conf import settings
 from django.core.cache import cache
 from rest_framework_simplejwt import tokens
+from templated_email import send_templated_mail
 
 from . import repos, models
 
@@ -42,7 +44,7 @@ class UserServicesV1:
             'email': user_data['email'],
             'phone_number': user_data['phone_number'],
         })
-        self._send_letter_to_email(email=user.email)
+        self._send_letter_to_email(user=user)
 
     def create_token(self, data:OrderedDict) -> dict:
         session_id = self._verify_phone_number(data=data)
@@ -67,18 +69,29 @@ class UserServicesV1:
             'refresh': str(refresh),
         }
 
-    def _verify_phone_number(self, data: OrderedDict) -> str:
-        user = self.user_repos.get_user(data)
+    def _verify_phone_number(self, data: OrderedDict, is_exists: bool = False) -> str:
+        phone_number = data['phone_number']
+        if is_exists:
+            user = self.user_repos.get_user(data)
+            phone_number = str(user.phone_number)
         code = self._generate_code()
         session_id = self._generate_session_id()
-        cache.set(session_id, {'phone_number': str(user.phone_number), 'code': code}, timeout=300)
+        cache.set(session_id, {'phone_number': phone_number, 'code': code, **data}, timeout=300)
         self._send_sms_to_phone_number(phone_number=data['phone_number'], code=code)
 
         return session_id
 
     @staticmethod
-    def _send_letter_to_email(email: str) -> None:
-        print(f'Send letter to {email}')
+    def _send_letter_to_email(user: models.CustomUser) -> None:
+        send_templated_mail(
+            template_name='welcome',
+            from_email=settings.EMAIL_HOST_USER,
+            recipient_list=[user.email],
+            context={
+                'email': user.email,
+                'phone_number': user.phone_number,
+            },
+        )
 
     @staticmethod
     def _send_sms_to_phone_number(phone_number: str, code: str) -> None:
