@@ -105,3 +105,5 @@ class UserServicesV1:
     @staticmethod
     def _generate_session_id() -> str:
         return str(uuid.uuid4())
+    
+    
