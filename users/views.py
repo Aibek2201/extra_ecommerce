@@ -28,7 +28,6 @@ class UserViewSet(ViewSet):
     def create_token(self, request, *args, **kwargs):
         serializer = serializers.CreateTokenSerializer(data=request.data,)
         serializer.is_valid(raise_exception=True)
-
         session_id = self.user_services.create_token(data=serializer.validated_data)
 
         return Response(session_id)
