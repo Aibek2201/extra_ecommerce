@@ -93,6 +93,7 @@ class UserServicesV1:
             },
         )
 
+
     @staticmethod
     def _send_sms_to_phone_number(phone_number: str, code: str) -> None:
         print(f'send sms code {code} to {phone_number}')
