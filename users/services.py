@@ -46,8 +46,11 @@ class UserServicesV1:
         })
         self._send_letter_to_email(user=user)
 
-    def create_token(self, data:OrderedDict) -> dict:
-        session_id = self._verify_phone_number(data=data)
+    def create_token(self, data: OrderedDict) -> dict:
+        session_id = self._verify_phone_number(
+            data=data,
+            is_exists=True,
+        )
 
         return {
             'session_id': session_id,
