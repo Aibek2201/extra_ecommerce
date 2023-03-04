@@ -4,11 +4,12 @@ from . import models
 
 
 class SellerProductCreateSerializer(serializers.ModelSerializer):
-
+    seller = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
     class Meta:
         model = models.Seller_Product
         fields = (
+            'seller',
             'product',
             'amount',
             'amount_currency',
