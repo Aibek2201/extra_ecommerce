@@ -3,7 +3,7 @@ from products import serializers as product_serializers
 from . import models
 
 
-class SellerProductCreateSerializer(serializers.ModelSerializer):
+class CreateSellerProductSerializer(serializers.ModelSerializer):
     seller = serializers.HiddenField(default=serializers.CurrentUserDefault())
 
     class Meta:
@@ -11,6 +11,17 @@ class SellerProductCreateSerializer(serializers.ModelSerializer):
         fields = (
             'seller',
             'product',
+            'amount',
+            'amount_currency',
+            'is_active',
+        )
+
+
+class UpdateSellerProductSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.Seller_Product
+        fields = (
             'amount',
             'amount_currency',
             'is_active',

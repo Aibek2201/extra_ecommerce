@@ -4,13 +4,23 @@ from utils import mixins
 from . import serializers, models, permissions
 
 
-class SellerProductViewSet(mixins.ActionSerializerMixin, ModelViewSet):
+class SellerProductViewSet(mixins.ActionSerializerMixin,
+                           mixins.ActionPermissionMixin,
+                           ModelViewSet):
     ACTION_SERIALIZERS = {
-        'create':serializers.SellerProductCreateSerializer,
+        'create':serializers.CreateSellerProductSerializer,
+        'update': serializers.UpdateSellerProductSerializer,
+        'partial_update': serializers.UpdateSellerProductSerializer,
     }
+    ACTION_PERMISSIONS = {
+        'update': (permissions.IsSellerAndOwner(),),
+        'partial_update': (permissions.IsSellerAndOwner(),),
+        'destroy': (permissions.IsSellerAndOwner(),),
+    }
+
     serializer_class = serializers.SellerProductSerializer
     queryset = models.Seller_Product.objects.select_related('seller', 'product')
-    permission_classes = permissions.IsSeller,
+    permission_classes = permissions.IsSellerorReadOnly,
 
-    def perform_create(self, serializer):
-        serializer.save(seller=self.request.user)
+
+
