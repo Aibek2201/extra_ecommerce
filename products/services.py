@@ -11,7 +11,7 @@ class ProductServicesInterface(Protocol):
 
 
 class ProductServicesV1:
-    product_repos: repos.ProductReposInterface = repos.ProductReposV1
+    product_repos: repos.ProductReposInterface = repos.ProductReposV1()
 
     def get_products(self) -> QuerySet[models.Product]:
         return self.product_repos.get_products()
@@ -23,7 +23,7 @@ class ProductImageServicesInterface(Protocol):
 
 
 class ProductImageServicesV1:
-    product_images_repos: repos.ProductImageReposInterface = repos.ProductImageReposV1
+    product_images_repos: repos.ProductImageReposInterface = repos.ProductImageReposV1()
 
     def get_product_images(self) -> QuerySet[models.ProductImage]:
         return self.product_images_repos.get_product_images()

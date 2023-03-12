@@ -16,7 +16,7 @@ class ProductReposV1:
     @staticmethod
     def get_products() -> QuerySet[models.Product]:
         return models.Product.objects.annotate(
-            min_amount=Min('seller_product__amount', filter=Q(seller_products__is_active=True))
+            min_amount=Min('seller_products__amount', filter=Q(seller_products__is_active=True))
         )
 
 
