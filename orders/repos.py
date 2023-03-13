@@ -23,7 +23,7 @@ class OrderReposV1:
             order_items = data.pop('order_items')
 
             order = models.Order.objects.create(**data)
-            models.Order.objects.bulk_create([
+            models.OrderItem.objects.bulk_create([
                 models.OrderItem(
                     order=order,
                     seller_product=i['seller_product'],

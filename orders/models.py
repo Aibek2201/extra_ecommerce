@@ -11,14 +11,13 @@ class Order(models.Model):
         to=get_user_model(),
         on_delete=models.PROTECT,
         related_name='orders',
-        limit_choices_to={'user_type': user_choices.UserTypeChoices.Customer}
+        limit_choices_to={'user_type': user_choices.UserTypeChoices.Customer},
     )
     status = models.CharField(
         max_length=20,
         choices=choices.OrderStatusChoices.choices,
         default=choices.OrderStatusChoices.New,
     )
-
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
