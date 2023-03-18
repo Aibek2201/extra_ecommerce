@@ -1,6 +1,6 @@
 from django.conf import settings
 from django.contrib.auth import get_user_model
-from django.core.mail import send_mass_mail
+from django.core.mail import send_mail
 from django.db.models import signals
 from django.dispatch import receiver
 
@@ -14,13 +14,11 @@ User = get_user_model()
 def send_email_to_sellers(sender, instance: models.Product, created: bool, **kwargs):
     if created:
         sellers = User.objects.filter(user_type=user_choices.UserTypeChoices.Seller)
-        seller_emails = [s.email for i in sellers]
+        seller_emails = [s.email for s in sellers]
 
-        send_mass_mail(
-            datatuple=(
-                f'new product {instance.title}',
-                f'information {instance.body}',
-                settings.EMAIL_HOST_USER,
-                seller_emails,
-            ),
+        send_mail(
+            f'new product {instance.title}',
+            f'information {instance.body}',
+            settings.EMAIL_HOST_USER,
+            seller_emails,
         )
