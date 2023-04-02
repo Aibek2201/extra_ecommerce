@@ -20,7 +20,7 @@ SECRET_KEY = 'django-insecure-=kr7n^2#3=^2=@0qrm*a1g9*-6knss&=0r81x=*0=p5vtu@ry3
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -83,6 +83,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'src.wsgi.application'
+ASGI_APPLICATION = 'src.asgi.application'
 
 
 # Database
@@ -182,4 +183,13 @@ SWAGGER_SETTINGS = {
             'in': 'header'
       }
    }
+}
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            'hosts': [('127.0.0.1', 6379)],
+        },
+    },
 }
