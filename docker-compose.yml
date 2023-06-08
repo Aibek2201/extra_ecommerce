@@ -3,6 +3,7 @@ version: '3'
 services:
   ecommerce:
     container_name: ecommerce
+    restart: always
     build:
       context: .
       dockerfile: Dockerfile
@@ -11,10 +12,10 @@ services:
     depends_on:
       - ecommerce-db
       - ecommerce-redis
-#    command:
-#      - ./start-django.sh
-#    ports:
-#      - "8000:8000"
+    command:
+      - ./start-django.sh
+    ports:
+      - "8000:8000"
 
   ecommerce-db:
     container_name: ecommerce-db
